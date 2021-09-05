@@ -1,5 +1,14 @@
 # vueit
 
+View + Model-View aspect of the Trakit application.
+Technologies:
+* Vue 2
+* Vuex (coming soon)
+* Axios - API calls
+* Vue Router
+
+
+
 ## Project setup
 ```
 npm install
@@ -22,3 +31,5 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+

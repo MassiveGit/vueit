@@ -1,16 +1,19 @@
 <template>
   <div id="app">
-    <projects></projects>
+    <p>
+      <router-link to="/">Go Home</router-link>
+      <router-link to="/projects">View Projects</router-link>
+      <router-link to="/tasks">View Tasks</router-link>
+    </p>
+    <router-view></router-view>
 
   </div>
 </template>
 
 <script>
 
-import Projects from "./components/Projects";
 export default {
   name: 'App',
-  components: {Projects},
 }
 </script>
 
@@ -22,5 +25,13 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+a {
+  padding: 0 10px;
+}
+
+.router-link-active {
+  color: red;
 }
 </style>
