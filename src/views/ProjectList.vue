@@ -1,6 +1,6 @@
 <template>
     <div class="projects">
-        <h1>Projects Page</h1>
+        <h1>Project List</h1>
         <Project v-for="project in projects" :key="project.id" :project="project"></Project>
     </div>
 </template>
@@ -11,6 +11,7 @@ import ApiInteractions from '@/services/ApiInteractions.js';
 
 
 export default {
+    title: "Vueit - Projects",
     components: {
         Project
     },

@@ -1,10 +1,12 @@
 <template>
+    <button  v-if="!showForm" @click="showTaskForm">Add Task</button>
     <form
         id="task-form"
+        v-else-if="showForm"
     v-on:submit.prevent="checkForm"
     >
 
-        <div v-if="errors.length">
+        <div id="errors" v-if="errors.length">
             <p> please correct the following errors:</p>
             <ul>
                 <li v-for="error in errors" :key="error">{{ error }}</li>
@@ -75,6 +77,7 @@
                     priority: "MEDIUM",
                 },
                 errors: [],
+                showForm: false,
                 typeEnums: [
                     {text: "TASK", value: "TASK"},
                     {text: "FEATURE", value: "FEATURE"},
@@ -89,24 +92,40 @@
             }
         },
         methods: {
+
+            showTaskForm() {
+                this.showForm = true
+
+            },
+
             checkForm() {
-                if (this.formBody.name && this.formBody.description) {
-                    this.submitForm()
+
+                if (this.formBody.name) {
+                    return this.submitForm()
                 }
+
                 this.errors = []; //reset otherwise once you pop you just can't stop
 
                 if (!this.formBody.name) {
                     this.errors.push('Task name required');
                 }
-                if(!this.formBody.description) {
-                    this.errors.push('Task description required');
-                }
-
-
             },
 
             submitForm() {
-              ApiInteractions.postTask(this.projectId,  this.formBody)
+              ApiInteractions
+                  .postTask(this.projectId,  this.formBody)
+                .then(response => {
+                    console.log("response.data.newTask[0] is:", response.data.newTask[0]);
+                    this.$emit('task-added', response.data.newTask[0]);
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+
+                //reset the form
+                this.formBody.name = null,
+                this.formBody.description = null,
+                this.showForm = false
             }
 
         }
@@ -114,5 +133,26 @@
 </script>
 
 <style scoped>
+
+#errors {
+    color: red;
+}
+form {
+    width: fit-content;
+    border-style: groove;
+    border-color: blue;
+    background-color: aquamarine;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin: 0 0 1em 0;
+}
+
+label {
+    float:left;
+}
+
 
 </style>

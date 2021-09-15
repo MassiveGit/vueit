@@ -22,8 +22,8 @@ export default {
         return apiClient.get(`/projects/${projectID}/tasks`);
     },
 
-    postTask(projectID, body) {
-        return apiClient.post(`/projects/${projectID}/tasks`, body);
+    async postTask(projectID, body) {
+        return await apiClient.post(`/projects/${projectID}/tasks`, body);
     },
 
     deleteTask(projectID, taskID) {
