@@ -15,7 +15,7 @@ export default {
     },
 
     postProject(body) {
-        return apiClient.post('projects', body);
+        return apiClient.post('/projects', body);
     },
 
     getTasksInProject(projectID) {
