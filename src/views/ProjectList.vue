@@ -1,7 +1,7 @@
 <template>
     <div class="projects">
         <h1>Project List</h1>
-        <Project v-for="project in projects" :key="project.id" :project="project"></Project>
+        <Project v-for="(project, index) in projects" :key="project.id" :project="project" @delete-project="removeProjectFromList(index)"></Project>
         <addProject @project-added="updateProjectList"></addProject>
     </div>
 </template>
@@ -27,7 +27,10 @@ export default {
         updateProjectList(newProject) {
             this.projects.push(newProject);
             console.log(this.projects)
-        }
+        },
+        removeProjectFromList(index){
+            this.projects.splice(index, 1);
+        },
 
     },
     created() {

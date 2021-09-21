@@ -1,13 +1,31 @@
 <template>
-      <router-link  tag="div" class="project" :to="{ name: 'tasks', params: {projectId: project.id}}">{{project.name}}</router-link>
+    <div>
+        <router-link  tag="div" class="project" :to="{ name: 'tasks', params: {projectId: project.id}}">{{project.name}}
+            <deleteProjectButton @delete-project="deleteProject"></deleteProjectButton>
+        </router-link>
+
+
+    </div>
+
     <!-- <p v-if="showDescription == true">{{this.selectedProject.description}}</p> -->
 </template>
 
 <script>
+    import deleteProjectButton from "./deleteProjectButton";
+    import ApiInteractions from "../services/ApiInteractions";
 export default {
-  name: 'project',
-  props: {
-    project: Object
+    name: 'project',
+    components: {
+        deleteProjectButton
+    },
+    props: {
+        project: Object
+    },
+    methods: {
+        deleteProject() {
+            ApiInteractions.deleteProject(this.project.id);
+            this.$emit('delete-project')
+        },
   }
 }
 </script>

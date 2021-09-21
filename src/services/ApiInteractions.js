@@ -18,6 +18,10 @@ export default {
         return apiClient.post('/projects', body);
     },
 
+    deleteProject(projectID) {
+        return apiClient.delete(`/projects/${projectID}`);
+    },
+
     getTasksInProject(projectID) {
         return apiClient.get(`/projects/${projectID}/tasks`);
     },
