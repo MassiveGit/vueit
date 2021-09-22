@@ -1,5 +1,5 @@
 <template>
-    <transition name="fade">
+    <transition :name="wasDeleted">
         <div class="task" @click="toggleDesc">
             <div class="task-text">
                 <h3 class="taskName">{{task.name}}</h3>
@@ -29,10 +29,15 @@ export default {
     },
     methods: {
 
+
       deleteTask() {
           ApiInteractions.deleteTask(this.task.project_id, this.task.id);
-          this.$emit('delete-task')
+          this.$emit('delete-task', this.task.id)
       },
+        wasDeleted() {
+          //TODO: add stuff here so that transition is only applied if the task was deleted via button, not moved
+
+        },
         toggleDesc() {
           this.showDesc = !this.showDesc;
 

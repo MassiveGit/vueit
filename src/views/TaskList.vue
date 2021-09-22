@@ -8,7 +8,7 @@
                 <h3>TODO:</h3>
                 <addTask @task-added="updateTasks" :projectId="projectId"></addTask>
                 <draggable class="h-100" v-model="todoTasks" animation="200" group="taskState" @add="onAdd($event, 'NEW')" :component-data="getComponentData()">
-                    <Task @delete-task="removeTaskFromList(index)" v-for="(task, index) in todoTasks" :key="task.id" :data-id="task.id" :task="task"></Task>
+                    <Task @delete-task="removeTaskFromList" v-for="(task, index) in todoTasks" :key="task.id" :data-id="task.id" :task="task"></Task>
                 </draggable>
 
 
@@ -16,7 +16,7 @@
             <div class="task-column" id="done-tasks">
                 <h3>DONE:</h3>
                 <draggable class="h-100" v-model="doneTasks" animation="200" group="taskState" @add="onAdd($event, 'DONE')">
-                    <Task @delete-task="removeTaskFromList(index)" v-for="(task, index) in doneTasks" :key="task.id" :data-id="task.id" :task="task"></Task>
+                    <Task @delete-task="removeTaskFromList" v-for="(task, index) in doneTasks" :key="task.id" :data-id="task.id" :task="task"></Task>
                 </draggable>
             </div>
         </div>
@@ -67,8 +67,7 @@ export default {
         onAdd(event, status){
             if (status == "DONE" || status == "NEW") {
                 let taskId = event.item.getAttribute('data-id');
-                console.log("id of task is:", taskId);
-                let taskIndex = this.tasks.findIndex((obj => obj.id === parseInt(taskId)));
+                let taskIndex = this.findTaskIndexById(taskId);
                 console.log("index of task is: ", taskIndex);
                 console.log("taskID is: ", taskId);
                 console.log(this.tasks[2].id);
@@ -78,8 +77,12 @@ export default {
             }
             //ApiInteractions.updateTask(this.task.project_id, this.task.id);
         },
-        removeTaskFromList(index){
-            this.tasks.splice(index, 1);
+        findTaskIndexById(id){
+            return this.tasks.findIndex((obj => obj.id === parseInt(id)));
+        },
+        removeTaskFromList(id){
+            let taskIndex = this.findTaskIndexById(id);
+            this.tasks.splice(taskIndex, 1);
             this.refreshTaskStateLists();
         },
         incompleteTasks() {
