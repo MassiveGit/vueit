@@ -1,12 +1,16 @@
 <template>
     <div class="projects">
         <h1>Project List</h1>
-        <Project v-for="(project, index) in projects" :key="project.id" :project="project" @delete-project="removeProjectFromList(index)"></Project>
+        <draggable v-model="projects" animation="200" group="projects">
+            <Project v-for="(project, index) in projects" :key="project.id" :project="project" @delete-project="removeProjectFromList(index)"></Project>
+        </draggable>
+
         <addProject @project-added="updateProjectList"></addProject>
     </div>
 </template>
 
 <script>
+import draggable from "vuedraggable";
 import Project from '@/components/Project.vue';
 import addProject from '@/components/addProject.vue';
 import ApiInteractions from '@/services/ApiInteractions.js';
@@ -16,7 +20,8 @@ export default {
     title: "Vueit - Projects",
     components: {
         Project,
-        addProject
+        addProject,
+        draggable
     },
     data() {
         return {
