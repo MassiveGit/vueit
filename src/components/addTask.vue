@@ -1,8 +1,9 @@
 <template>
-    <button  v-if="!showForm" @click="showTaskForm">Add Task</button>
+    <button  v-if="!showForm" @click.stop="showTaskForm">Add Task</button>
     <form
         id="task-form"
         v-else-if="showForm"
+        v-click-outside="hideTaskForm"
     v-on:submit.prevent="checkForm"
     >
 
@@ -18,6 +19,7 @@
             <input
                 id="name"
                 type="text"
+                v-focus
                 v-model.trim="formBody.name"
                 name="name"
             >
@@ -94,7 +96,13 @@
         methods: {
 
             showTaskForm() {
-                this.showForm = true
+                this.showForm = true;
+
+            },
+
+            hideTaskForm() {
+                this.showForm = false;
+                this.resetForm();
 
             },
 
@@ -111,6 +119,12 @@
                 }
             },
 
+            resetForm() {
+                this.formBody.name = null,
+                this.formBody.description = null,
+                this.showForm = false
+            },
+
             submitForm() {
               ApiInteractions
                   .postTask(this.projectId,  this.formBody)
@@ -122,10 +136,8 @@
                     console.log(error);
                 })
 
-                //reset the form
-                this.formBody.name = null,
-                this.formBody.description = null,
-                this.showForm = false
+                this.resetForm();
+
             }
 
         }
