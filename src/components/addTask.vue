@@ -1,5 +1,5 @@
 <template>
-    <button  v-if="!showForm" @click.stop="showTaskForm">Add Task</button>
+    <button class="addButton" v-if="!showForm" @click.stop="showTaskForm">+</button>
     <form
         id="task-form"
         v-else-if="showForm"
@@ -150,7 +150,6 @@
     color: red;
 }
 form {
-    width: fit-content;
     border-style: groove;
     border-color: blue;
     background-color: aquamarine;
@@ -164,6 +163,24 @@ input[type="text"] {
 
 label {
     float:left;
+}
+
+.addButton {
+    width: 100%;
+    background-color: #0080FF;
+    color: black;
+    font-size: xx-large;
+    border-radius: 25px;
+    border-color: black;
+    border-style: solid;
+    margin: 5px auto;
+    padding: 10px;
+    margin-bottom: 2px;
+
+}
+
+.addButton:hover {
+    background-color: aqua;
 }
 
 

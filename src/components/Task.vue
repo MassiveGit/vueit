@@ -1,13 +1,13 @@
 <template>
-    <transition :name="wasDeleted">
-        <div class="task" @click="toggleDesc">
+    <!--<transition name="fade">-->
+        <div class="task" v-bind:class="this.task.type" @click="toggleDesc">
             <div class="task-text">
                 <h3 class="taskName">{{task.name}}</h3>
                 <p v-if="showDesc" class="taskDesc">{{task.description}}</p>
             </div>
             <delete-task-button @delete-task="deleteTask"></delete-task-button>
         </div>
-    </transition>
+    <!--</transition>-->
 
 
 </template>
@@ -27,17 +27,13 @@ export default {
       }
 
     },
+    computed: {
+    },
     methods: {
-
-
       deleteTask() {
           ApiInteractions.deleteTask(this.task.project_id, this.task.id);
           this.$emit('delete-task', this.task.id)
       },
-        wasDeleted() {
-          //TODO: add stuff here so that transition is only applied if the task was deleted via button, not moved
-
-        },
         toggleDesc() {
           this.showDesc = !this.showDesc;
 
@@ -58,7 +54,10 @@ export default {
     border-radius: 15px;
     padding-bottom: 2px;
     margin-bottom: 2px;
-    background-color: aqua;
+}
+
+.task:hover {
+    background-color: #0080FF;
 }
 
 .task-text {
@@ -94,6 +93,22 @@ a {
 }
 p {
     float: left;
+
+}
+
+/* TASK FEATURE and BUG are the three currently supported task types. This CSS is used to statically colour code them */
+.TASK {
+    background-color: aqua;
+
+}
+
+.FEATURE {
+    background-color: lightgreen;
+
+}
+
+.BUG {
+    background-color: lightcoral;
 
 }
 

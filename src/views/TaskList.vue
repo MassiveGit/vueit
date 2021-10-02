@@ -5,18 +5,18 @@
         <div class="row">
             <p v-if="tasks.length == 0">There are no tasks yet for this project</p>
             <div class="task-column" id="todo-tasks">
-                <h3>TODO:</h3>
+                <h3 class="header mt-2">TODO:</h3>
                 <addTask @task-added="updateTasks" :projectId="projectId"></addTask>
-                <draggable class="h-100" v-model="todoTasks" animation="200" group="taskState" @add="onAdd($event, 'NEW')" :component-data="getComponentData()">
-                    <Task @delete-task="removeTaskFromList" v-for="(task, index) in todoTasks" :key="task.id" :data-id="task.id" :task="task"></Task>
+                <draggable class="h-100" v-model="todoTasks" animation="200" group="taskState" @add="onAdd($event, 'NEW')" @change="updateTaskListOrder($event, 'NEW')" :component-data="getComponentData()">
+                    <Task @delete-task="removeTaskFromList" v-for="(task) in todoTasks" :key="task.id" :data-id="task.id" :task="task"></Task>
                 </draggable>
 
 
             </div>
             <div class="task-column" id="done-tasks">
-                <h3>DONE:</h3>
-                <draggable class="h-100" v-model="doneTasks" animation="200" group="taskState" @add="onAdd($event, 'DONE')">
-                    <Task @delete-task="removeTaskFromList" v-for="(task, index) in doneTasks" :key="task.id" :data-id="task.id" :task="task"></Task>
+                <h3 class="header mt-2">DONE:</h3>
+                <draggable class="h-100" v-model="doneTasks" animation="200" group="taskState" @add="onAdd($event, 'DONE')" @change="updateTaskListOrder($event, 'DONE')">
+                    <Task @delete-task="removeTaskFromList" v-for="(task) in doneTasks" :key="task.id" :data-id="task.id" :task="task"></Task>
                 </draggable>
             </div>
         </div>
@@ -43,42 +43,76 @@ export default {
     data() {
         return {
             tasks: [],
-            todoTasks: [], //Vue.draggable doesn't appear to work well with filters, so have to duplicate tasks array into it's separate state based arrays. This has led to the janky array refresh method below.
+            todoTasks: [], //Vue.draggable doesn't appear to work well with filters, so have to duplicate tasks array into separate state based arrays. This has led to the janky array refresh method below.
             doneTasks: []
 
         }
     },
     computed: {
-        incompleteTasksComputed() {
-            return this.tasks.filter(function (task) {
-                return task.status.indexOf('NEW')!== -1
-            })
-        },
-
-        completeTasksComputed() {
-            return this.tasks.filter(function (task) {
-                return task.status.indexOf('DONE')!== -1
-            })
-        },
-
-
     },
     methods: {
         onAdd(event, status){
             if (status == "DONE" || status == "NEW") {
                 let taskId = event.item.getAttribute('data-id');
-                let taskIndex = this.findTaskIndexById(taskId);
-                console.log("index of task is: ", taskIndex);
-                console.log("taskID is: ", taskId);
-                console.log(this.tasks[2].id);
-                this.tasks[taskIndex].status = status;
+                let task = this.findTaskById(taskId);
+                console.log(task);
+                let data = JSON.stringify({
+                    status: status
+                })
+
+                ApiInteractions
+                    .patchTask(task.project_id, task.id, data)
+                .then(response => {
+                    console.log(response.data);
+                    let updatedTask = response.data.updatedTask[0];
+                    if (updatedTask.id == task.id){
+                        let taskIndex = this.findTaskIndexById(task.id);
+                        this.tasks[taskIndex] = updatedTask;
+                        //this.refreshTaskStateLists();
+                    } else {
+                        console.log("task update failed - returned taskId " + updatedTask.id + " did not match ID of submitted task: " + task.id);
+                    }
+                })
+                .catch(e => {
+                    console.log(e);
+                })
             } else {
                 console.log("Oi, stop that :(");
             }
             //ApiInteractions.updateTask(this.task.project_id, this.task.id);
         },
+        updateTaskListOrder(event, status){
+            console.log('updateListOrder called for state: ' + status);
+            if(status == 'NEW') {
+                this.todoTasks.map((task, index) => {
+                    task.order_id = index + 1;
+                })
+
+                ApiInteractions
+                    .updateTasksOrder(this.projectId, this.todoTasks)
+                    .then(response => {
+                        console.log(response);
+                    })
+            }
+            else if(status == 'DONE') {
+                this.doneTasks.map((task, index) => {
+                    task.order_id = index + 1;
+                })
+
+                ApiInteractions
+                    .updateTasksOrder(this.projectId, this.doneTasks)
+                    .then(response => {
+                        console.log(response);
+                    })
+            }
+
+
+        },
         findTaskIndexById(id){
             return this.tasks.findIndex((obj => obj.id === parseInt(id)));
+        },
+        findTaskById(id){
+            return this.tasks[this.findTaskIndexById(id)];
         },
         removeTaskFromList(id){
             let taskIndex = this.findTaskIndexById(id);
@@ -133,7 +167,7 @@ export default {
         ApiInteractions
             .getTasksInProject(this.projectId)
             .then(response => {
-                this.tasks = response.data.tasks
+                this.tasks = response.data.tasks.sort((a,b) => a.order_id-b.order_id);
                 this.refreshTaskStateLists()
 
             })
@@ -147,25 +181,31 @@ export default {
 <style scoped>
     .row {
         align-content: center;
+    }
 
+    .header {
+        font-size: xx-large;
     }
 
     .task-column {
         float: left;
-        width: 45%;
+        width: 41%;
+        border-radius: 15px;
+        background-color: #A8A6A5;
+        margin-bottom: 2%;
 
     }
 
     #todo-tasks {
         margin-left: 5%;
         padding-right: 10px;
-        background-color: brown;
-    }
+        margin-right: 0.5%;
+            }
 
     #done-tasks {
         margin-right: 5%;
         padding-left: 10px;
-        background-color: blue;
+
     }
 
     /* Clear floats after the columns */

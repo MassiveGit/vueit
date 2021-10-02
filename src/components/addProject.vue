@@ -71,6 +71,7 @@
                 .then(response => {
                     console.log("Project created", response.data.newProject[0]);
                     this.$emit('project-added', response.data.newProject[0]);
+                    this.$router.push({ name: 'tasks', params: {projectId: response.data.newProject[0].id}})
                 })
                 .catch((error) => {
                     console.log(error);

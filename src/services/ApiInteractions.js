@@ -9,29 +9,43 @@ const apiClient = axios.create({
     }
 })
 
+const basePath = '/projects';
+
 export default {
     getProjects() {
-        return apiClient.get('/projects');
+        return apiClient.get(basePath);
     },
 
     postProject(body) {
-        return apiClient.post('/projects', body);
+        return apiClient.post(basePath, body);
+    },
+
+    updateProjectsOrder(body) {
+        return apiClient.put(basePath, body);
     },
 
     deleteProject(projectID) {
-        return apiClient.delete(`/projects/${projectID}`);
+        return apiClient.delete(basePath + `/${projectID}`);
     },
 
     getTasksInProject(projectID) {
-        return apiClient.get(`/projects/${projectID}/tasks`);
+        return apiClient.get(basePath + `/${projectID}/tasks`);
     },
 
     async postTask(projectID, body) {
-        return await apiClient.post(`/projects/${projectID}/tasks`, body);
+        return await apiClient.post(basePath + `/${projectID}/tasks`, body);
+    },
+
+    patchTask(projectID, taskID, body) {
+        return apiClient.patch(basePath + `/${projectID}/tasks/${taskID}`, body);
+    },
+
+    updateTasksOrder(projectID, body) {
+        return apiClient.put(basePath + `/${projectID}/tasks`, body);
     },
 
     deleteTask(projectID, taskID) {
-        return apiClient.delete(`/projects/${projectID}/tasks/${taskID}`);
+        return apiClient.delete(basePath + `/${projectID}/tasks/${taskID}`);
     },
 
 
