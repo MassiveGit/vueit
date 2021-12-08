@@ -1,7 +1,7 @@
 <template>
     <div class="projects">
         <h1>Project List</h1>
-        <draggable v-model="projects" animation="200" group="projects" @change="updateListOrder" @onEnd="onEnd">
+        <draggable v-model="projects" animation="200" group="projects" @change="updateListOrder">
             <Project v-for="(project, index) in projects" :key="project.id" :project="project" @delete-project="removeProjectFromList(index)"></Project>
         </draggable>
 
@@ -23,19 +23,20 @@ export default {
         addProject,
         draggable
     },
-    data() {
-        return {
-            projects: []
-        }
+    computed: {
+      projects: {
+          get() {
+              return this.$store.state.projects;
+          },
+          set(value){
+              return this.$store.commit('setProjects', value);
+          }
+
+      }
     },
     methods: {
         createProject(newProject) {
-
-            //this.projects.push(newProject);
             console.log(newProject)
-        },
-        onEnd() {
-          console.log("onend called");
         },
         updateListOrder(){
             console.log('updateListOrder called');
@@ -59,7 +60,7 @@ export default {
         ApiInteractions
             .getProjects()
             .then(response => {
-                this.projects = response.data.projects.sort((a,b) => a.order_id-b.order_id);
+                this.$store.commit('setProjects', response.data.projects.sort((a,b) => a.order_id-b.order_id));
             })
             .catch(error => {
                 console.log('Error fetching projects: ' + error.response)

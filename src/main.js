@@ -1,13 +1,23 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from './App.vue'
+import store from './store' //Vuex store
 
 //Bootstrap CSS:
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
+
+//Set title of each distinct page:
 import titleMixin from "./mixins/titleMixin";
+
+
+// Route Component Imports:
+import Projects from "./views/ProjectList";
+import Register from "./views/Register";
+import Login from "./views/Login";
+import Tasks from "./views/TaskList";
 
 
 Vue.mixin(titleMixin)
@@ -17,16 +27,11 @@ Vue.use(VueRouter)
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 
-// Route Component Imports
-import Projects from "./views/ProjectList";
-import Tasks from "./views/TaskList";
 
 
 /**
- * Vue Directives (could create an external directives file
+ * Vue Directives
  */
-
-
 //Allows clicking outside of an element to act as an event on it.
 Vue.directive('click-outside', {
   bind: function (el, binding, vnode) {
@@ -51,13 +56,14 @@ Vue.directive('focus', {
   }
 })
 
-
-
-
-// Route definitions - could split this out into another file and import it here. Do that next time.
+/**
+ * Route definitions
+ */
 const routes = [
   { path: '/projects', name: "projects", component: Projects },
-  { path: '/tasks/:projectId', name: "tasks", component: Tasks, props: true }
+  { path: '/tasks/:projectId', name: "tasks", component: Tasks, props: true },
+  { path: '/register', name: "register", component: Register },
+  { path: '/login', name: "login", component: Login },
 ]
 
 const router = new VueRouter({
@@ -67,6 +73,7 @@ const router = new VueRouter({
 
 new Vue({
   router,
+  store,
   render: h => h(App),
 }).$mount('#app')
 

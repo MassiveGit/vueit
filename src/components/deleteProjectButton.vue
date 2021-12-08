@@ -12,7 +12,9 @@
         name: "deleteProjectButton",
         methods: {
             deleteProject() {
-             this.$emit('delete-project')
+                if(confirm("Deleting a project is currently irreversible. Continue?")){
+                    this.$emit('delete-project')
+                }
             }
         }
     }

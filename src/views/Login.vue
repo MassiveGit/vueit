@@ -1,0 +1,93 @@
+<template>
+    <div class="projects">
+        <h1>Register</h1>
+        <form
+        id="registerForm"
+        v-on:submit.prevent="validateAndSubmitForm"
+        >
+            <p>
+                <label for="username">Username:</label>
+                <input
+                        id="username"
+                        type="text"
+                        v-focus
+                        v-model.trim="formBody.username"
+                        name="username"
+                >
+            </p>
+            <p>
+                <label for="password">Password:</label>
+                <input
+                        id="password"
+                        type="password"
+                        v-model.trim="formBody.password"
+                        name="password"
+                >
+            </p>
+            <p>
+                <input
+                        type="submit"
+                        value="Create Account"
+                >
+            </p>
+        </form>
+
+
+    </div>
+</template>
+
+<script>
+import ApiInteractions from '@/services/ApiInteractions.js';
+
+
+export default {
+    title: "Vueit - Register",
+    components: {
+    },
+    data() {
+        return {
+            formData: {
+                username: null,
+                password: null,
+            }
+        }
+    },
+    methods: {
+
+        validateAndSubmitForm(){
+
+            console.log('Submitting User Signup request');
+            if(!this.formData.username.length || this.formData.username.length < 5){
+                console.log("Username must be 5 or more Chars");
+            }
+            if(!this.formData.password || this.formData.password.length < 8){
+                console.log("Password must be 8 or more Chars");
+            }
+
+
+            ApiInteractions
+            .postSignup(this.formData)
+            .then(response => {
+                console.log(response);
+            })
+
+        },
+
+    },
+    created() {
+        ApiInteractions
+            .getProjects()
+            .then(response => {
+                this.projects = response.data.projects.sort((a,b) => a.order_id-b.order_id);
+            })
+            .catch(error => {
+                console.log('Error fetching projects: ' + error.response)
+            })
+    }
+
+}
+</script>
+
+<style scoped>
+
+</style>

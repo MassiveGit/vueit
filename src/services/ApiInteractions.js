@@ -49,4 +49,16 @@ export default {
     },
 
 
+    /**
+     *  USER CRUD
+     */
+    async postSignup(body) {
+        return await apiClient.post(`/auth/signup`, body);
+    },
+
+    async postSignin(body) {
+        return await apiClient.post(`/auth/signin`, body);
+    },
+
+
 }

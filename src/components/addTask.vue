@@ -31,6 +31,7 @@
                 type="text"
                 v-model.trim="formBody.description"
                 name="desc"
+                placeholder="Optional"
             >
         </p>
         <p>
@@ -150,9 +151,12 @@
     color: red;
 }
 form {
-    border-style: groove;
-    border-color: blue;
+    border-style: solid;
+    border-color: black;
+    border-radius: 25px;
+    padding: 5px;
     background-color: aquamarine;
+    margin-bottom: 2px;
 }
 
 input[type="text"] {
