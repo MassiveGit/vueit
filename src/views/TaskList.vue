@@ -7,7 +7,7 @@
             <div class="task-column" id="todo-tasks">
                 <h3 class="header mt-2">TODO:</h3>
                 <addTask @task-added="updateTasks" :projectId="projectId"></addTask>
-                <draggable class="h-100" v-model="todoTasks" animation="200" group="taskState" @add="onAdd($event, 'NEW')" @change="updateTaskListOrder($event, 'NEW')" :component-data="getComponentData()">
+                <draggable class="h-100" v-model="todoTasks" animation="200" group="taskState" handle=".taskName" @add="onAdd($event, 'NEW')" @change="updateTaskListOrder($event, 'NEW')" :component-data="getComponentData()">
                     <Task @delete-task="removeTaskFromList" v-for="(task) in todoTasks" :key="task.id" :data-id="task.id" :task="task"></Task>
                 </draggable>
 
