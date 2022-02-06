@@ -66,14 +66,14 @@ export default {
 }
 
 .taskName {
-
+    text-align: left;
     display: block;
     padding: 2px;
 
 }
 
 .taskDesc {
-    float: right;
+    text-align: left;
     display: inline;
     padding: 2px;
 

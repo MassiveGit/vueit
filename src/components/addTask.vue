@@ -41,7 +41,7 @@
                 name="type"
                 v-model="formBody.type"
             >
-                <option v-for="typeEnum in typeEnums" :value="typeEnum.value" :key="typeEnum.value">{{typeEnum.text}}</option>
+                <option v-for="typeEnum in typeEnums" :value="typeEnum.value" :key="typeEnum.value" :style="{backgroundColor: typeEnum.colour}">{{typeEnum.text}}</option>
             </select>
         </p>
         <p>
@@ -82,10 +82,9 @@
                 errors: [],
                 showForm: false,
                 typeEnums: [
-                    {text: "TASK", value: "TASK"},
-                    {text: "FEATURE", value: "FEATURE"},
-                    {text: "BUG", value: "BUG"},
-                    {text: "CLICK ME!", value: "WRONG"}
+                    {text: "TASK", value: "TASK", colour: "aqua"},
+                    {text: "FEATURE", value: "FEATURE", colour: "lightgreen"},
+                    {text: "BUG", value: "BUG", colour: "lightcoral"}
                     ],
                 priorityEnums: [
                     {text: "HIGH", value: "HIGH"},

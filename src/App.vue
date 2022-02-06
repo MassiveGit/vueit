@@ -2,7 +2,6 @@
   <div id="app">
     <p>
       <router-link to="/projects">View Projects</router-link>
-      <router-link to="/tasks">View Tasks</router-link>
       <router-link :to="{name: 'register'}">Register</router-link>
     </p>
     <router-view></router-view>
