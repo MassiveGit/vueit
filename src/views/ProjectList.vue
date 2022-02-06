@@ -1,6 +1,6 @@
 <template>
     <div class="projects">
-        <h1>Project List</h1>
+        <h1>Projects</h1>
         <draggable v-model="projects" animation="200" group="projects" @change="updateListOrder">
             <Project v-for="(project, index) in projects" :key="project.id" :project="project" @delete-project="removeProjectFromList(index)"></Project>
         </draggable>
@@ -39,7 +39,7 @@ export default {
             console.log(newProject)
         },
         updateListOrder(){
-            console.log('updateListOrder called');
+            //Calling this.projects.map still works after moving from internal state to Vuex store, because it invokes the computed value's setter (without having to use this.projects = ...)
             this.projects.map((project, index) => {
               project.order_id = index + 1;
             })
