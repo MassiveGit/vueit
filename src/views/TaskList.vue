@@ -7,15 +7,15 @@
             <div class="task-column" id="todo-tasks">
                 <h3 class="header mt-2">TODO:</h3>
                 <addTask @task-added="updateTasks" :projectId="projectId"></addTask>
-                <draggable class="h-100" v-model="todoTasks" animation="200" group="taskState" handle=".taskName" @add="onAdd($event, 'NEW')" @change="updateTaskListOrder($event, 'NEW')" :component-data="getComponentData()">
-                    <Task @delete-task="removeTaskFromList" v-for="(task) in todoTasks" :key="task.id" :data-id="task.id" :task="task"></Task>
+                <draggable class="h-100" v-model="todoTasks" animation="200" group="taskState" handle=".taskName" @add="onAdd($event, 'NEW')" @change="updateTaskListOrder('NEW')" :component-data="getComponentData()">
+                    <Task @delete-task="removeTaskFromList" @doing-task="toggleTaskInProgress" v-for="(task) in todoTasks" :key="task.id" :data-id="task.id" :task="task"></Task>
                 </draggable>
 
 
             </div>
             <div class="task-column" id="done-tasks">
                 <h3 class="header mt-2">DONE:</h3>
-                <draggable class="h-100" v-model="doneTasks" animation="200" group="taskState" @add="onAdd($event, 'DONE')" @change="updateTaskListOrder($event, 'DONE')">
+                <draggable class="h-100" v-model="doneTasks" animation="200" group="taskState" @add="onAdd($event, 'DONE')" @change="updateTaskListOrder('DONE')">
                     <Task @delete-task="removeTaskFromList" v-for="(task) in doneTasks" :key="task.id" :data-id="task.id" :task="task"></Task>
                 </draggable>
             </div>
@@ -52,23 +52,42 @@ export default {
     },
     methods: {
         onAdd(event, status){
-            if (status == "DONE" || status == "NEW") {
+            if (status == "DONE" || status == "INPRG" || status == "NEW") {
                 let taskId = event.item.getAttribute('data-id');
                 let task = this.findTaskById(taskId);
                 console.log(task);
-                let data = JSON.stringify({
-                    status: status
-                })
+                this.patchTaskStatus(task, status)
+            } else {
+                console.log("Oi, stop that :(");
+            }
+        },
 
-                ApiInteractions
-                    .patchTask(task.project_id, task.id, data)
+        toggleTaskInProgress(id){
+            let task = this.findTaskById(id);
+            if (task.status === 'INPRG') {
+                this.patchTaskStatus(task, "NEW");
+            }
+
+            if (task.status === 'NEW') {
+                this.patchTaskStatus(task, "INPRG");
+            }
+        },
+        patchTaskStatus(task, status){
+            let data = JSON.stringify({
+                status: status
+            })
+
+            ApiInteractions
+                .patchTask(task.project_id, task.id, data)
                 .then(response => {
                     console.log(response.data);
                     let updatedTask = response.data.updatedTask[0];
                     if (updatedTask.id == task.id){
                         let taskIndex = this.findTaskIndexById(task.id);
                         this.tasks[taskIndex] = updatedTask;
-                        //this.refreshTaskStateLists();
+                        console.log("Task: " + updatedTask.name  + " Status updated to: " + updatedTask.status + " Order is: " + updatedTask.order_id);
+                        this.updateTaskListOrder(status); //called to ensure tasks index is set correctly in new state, before refreshing the state arrays.
+                        this.refreshTaskStateLists();
                     } else {
                         console.log("task update failed - returned taskId " + updatedTask.id + " did not match ID of submitted task: " + task.id);
                     }
@@ -76,15 +95,12 @@ export default {
                 .catch(e => {
                     console.log(e);
                 })
-            } else {
-                console.log("Oi, stop that :(");
-            }
-            //ApiInteractions.updateTask(this.task.project_id, this.task.id);
         },
-        updateTaskListOrder(event, status){
+        updateTaskListOrder(status){
             console.log('updateListOrder called for state: ' + status);
-            if(status == 'NEW') {
+            if(status == 'NEW' || status == "INPRG") {
                 this.todoTasks.map((task, index) => {
+                  console.log('Task being ordered: ' + task.name);
                     task.order_id = index + 1;
                 })
 
@@ -121,7 +137,7 @@ export default {
         },
         incompleteTasks() {
             return this.tasks.filter(function (task) {
-                return task.status.indexOf('NEW')!== -1
+                return task.status.indexOf('NEW')!== -1 || task.status.indexOf('INPRG')!== -1
             })
         },
 
@@ -132,6 +148,8 @@ export default {
         },
 
         refreshTaskStateLists() {
+          //So uh, because I'm deriving the todo/done task lists from this.tasks, they also inherit its ordering... which was only set on first page load. Reordering this.tasks each time task state lists are updated, prevents weird order changes.
+            this.tasks = this.tasks.sort((a,b) => a.order_id-b.order_id);
             this.todoTasks = this.incompleteTasks()
             this.doneTasks = this.completeTasks()
         },
@@ -139,7 +157,8 @@ export default {
         updateTasks(newTask){
             this.tasks.push(newTask);
             this.refreshTaskStateLists();
-            console.log(this.tasks)
+            this.updateTaskListOrder("NEW");
+            console.log(this.tasks);
         },
         handleTaskChange() {
             console.log('task state updated');

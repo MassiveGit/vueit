@@ -1,12 +1,20 @@
 <template>
     <!--<transition name="fade">-->
-        <div class="task" v-bind:class="this.task.type" @click="toggleDesc">
+    <div>
+        <div class="inProgText" v-if="task.status == 'INPRG'">IN PROGRESS</div>
+        <div class="task" v-bind:class="[this.task.type, this.task.status]" @click="toggleDesc">
             <div class="task-text">
                 <h3 class="taskName">{{task.name}}</h3>
                 <p v-if="showDesc" class="taskDesc">{{task.description}}</p>
             </div>
+          <div id="taskControls">
             <delete-task-button @delete-task="deleteTask"></delete-task-button>
+            <doing-task-button v-if="task.status === 'NEW' || task.status == 'INPRG'" @doing-task="doingTask"></doing-task-button>
+          </div>
+
         </div>
+    </div>
+
     <!--</transition>-->
 
 
@@ -14,10 +22,11 @@
 
 <script>
 import DeleteTaskButton from "./deleteTaskButton";
+import DoingTaskButton from "./doingTaskButton";
 import ApiInteractions from "../services/ApiInteractions";
 export default {
   name: 'tasks',
-    components: {DeleteTaskButton},
+    components: {DeleteTaskButton, DoingTaskButton},
     props: {
         task: Object
     },
@@ -34,6 +43,9 @@ export default {
           ApiInteractions.deleteTask(this.task.project_id, this.task.id);
           this.$emit('delete-task', this.task.id)
       },
+        doingTask() {
+            this.$emit('doing-task', this.task.id)
+        },
         toggleDesc() {
           this.showDesc = !this.showDesc;
 
@@ -62,6 +74,7 @@ export default {
 
 .task-text {
     padding-left: 20px;
+    width: 85%; /* Used in combination with overflow-wrap to ensure long titles don't shunt out the control buttons */
 
 }
 
@@ -69,15 +82,21 @@ export default {
     text-align: left;
     display: block;
     padding: 2px;
+    overflow-wrap: break-word;
+
 
 }
 
 .taskDesc {
-    text-align: left;
-    display: inline;
     padding: 2px;
+    overflow-wrap: break-word;
 
+}
 
+.inProgText {
+    float: left;
+    transform: rotate(90deg);
+    margin-top: 10px;
 }
 
 ul {
@@ -92,8 +111,12 @@ a {
   color: #42b983;
 }
 p {
-    float: left;
+    text-align: left;
 
+}
+
+#taskControls {
+  justify-content: flex-end;
 }
 
 /* TASK FEATURE and BUG are the three currently supported task types. This CSS is used to statically colour code them */
