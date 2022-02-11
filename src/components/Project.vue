@@ -1,6 +1,6 @@
 <template>
     <div>
-        <router-link  tag="div" class="project" :to="{ name: 'tasks', params: {projectId: project.id}}">{{project.name}}
+        <router-link tag="div" class="project" :to="{ name: 'tasks', params: {projectId: project.id}}">{{project.name}}
             <deleteProjectButton @delete-project="deleteProject"></deleteProjectButton>
         </router-link>
 
@@ -25,7 +25,7 @@ export default {
         deleteProject() {
             ApiInteractions.deleteProject(this.project.id);
             this.$emit('delete-project')
-        },
+        }
   }
 }
 </script>

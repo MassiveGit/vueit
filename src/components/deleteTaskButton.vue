@@ -12,7 +12,10 @@
         name: "deleteTaskButton",
         methods: {
             deleteTask() {
-             this.$emit('delete-task')
+              if(confirm("Deleting a project is currently irreversible, As I have discovered to my chagrin. Continue?")){
+                this.$emit('delete-task');
+                }
+
             }
         }
     }

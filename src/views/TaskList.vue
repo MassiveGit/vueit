@@ -1,6 +1,6 @@
 <template>
     <div class="tasks">
-        <h1>Tasks page for project {{projectId}}</h1>
+        <h1>{{this.projectDetails.name}}</h1>
 
         <div class="row">
             <p v-if="tasks.length == 0">There are no tasks yet for this project</p>
@@ -49,6 +49,10 @@ export default {
         }
     },
     computed: {
+       projectDetails () {
+         console.log(this.$store.getters.getProjectById(this.projectId));
+         return this.$store.getters.getProjectById(this.projectId);
+       }
     },
     methods: {
         onAdd(event, status){

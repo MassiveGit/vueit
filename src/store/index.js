@@ -15,6 +15,10 @@ export default new Vuex.Store({
             state.projects = projects;
         },
 
+        setTasks (state, tasks) {
+            state.tasks = tasks;
+        },
+
         addProject (state, project) {
             state.projects.push(project);
         },
@@ -23,5 +27,14 @@ export default new Vuex.Store({
             state.projects = projects;
         },
 
+        setSelectedProject (state, project) {
+            state.selectedProject = project;
+        }
+
+    },
+    getters: {
+        getProjectById: (state) => (id) => {
+            return state.projects.find(project => project.id === id);
+        }
     }
 })
