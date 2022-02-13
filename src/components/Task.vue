@@ -83,9 +83,7 @@ export default {
     display: block;
     padding: 2px;
     overflow-wrap: break-word;
-
-
-}
+  }
 
 .taskDesc {
     padding: 2px;

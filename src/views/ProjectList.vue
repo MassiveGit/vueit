@@ -1,10 +1,11 @@
 <template>
     <div class="projects">
         <h1>Projects</h1>
-        <draggable v-model="projects" animation="200" group="projects" @change="updateListOrder">
-            <Project v-for="(project, index) in projects" :key="project.id" :project="project" @delete-project="removeProjectFromList(index)"></Project>
+      <div class="dragArea">
+        <draggable v-model="projects" v-bind="dragOptions" animation="200" group="projects" @change="updateListOrder">
+          <Project v-for="(project, index) in projects" :key="project.id" :project="project" @delete-project="removeProjectFromList(index)"></Project>
         </draggable>
-
+      </div>
         <addProject @project-added="createProject"></addProject>
     </div>
 </template>
@@ -32,6 +33,15 @@ export default {
               return this.$store.commit('setProjects', value);
           }
 
+      },
+      dragOptions() {
+        return {
+          group: {
+            name: 'g1'
+          },
+          scrollSensitivity: 1000,
+          forceFallback: true
+        };
       }
     },
     methods: {
@@ -71,5 +81,10 @@ export default {
 </script>
 
 <style scoped>
+
+.dragArea {
+  overflow-y: auto;
+  height: 87vh;
+}
 
 </style>
