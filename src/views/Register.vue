@@ -84,7 +84,9 @@ export default {
             .postSignup(this.formData)
             .then(response => {
                 console.log(response);
-                alert("Success");
+                if(response.data.access_token) {
+                  localStorage.setItem('User', JSON.stringify(response.data));
+                }
                 //Check if response status was 200
                 //Add response data to browser memory
                 //extract User name from data
