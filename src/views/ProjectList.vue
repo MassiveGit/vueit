@@ -39,7 +39,7 @@ export default {
           group: {
             name: 'g1'
           },
-          scrollSensitivity: 1000,
+          scrollSensitivity: 200,
           forceFallback: true
         };
       }
@@ -84,7 +84,7 @@ export default {
 
 .dragArea {
   overflow-y: auto;
-  height: 87vh;
+  height: 76vh;
 }
 
 </style>

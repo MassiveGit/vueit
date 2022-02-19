@@ -3,9 +3,12 @@
 View + Model-View aspect of the Trakit application.
 Technologies:
 * Vue 2
-* Vuex (coming soon)
+* Vuex
 * Axios - API calls
 * Vue Router
+
+## Lessons Learned
+1. Implement data model first - View layer can wait. Mucking around with CSS and JS is fun and gives instant gratification, but sucks up a lot of time, and is likely to be changed later
 
 
 
