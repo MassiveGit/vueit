@@ -1,11 +1,33 @@
 import axios from "axios";
 
-const apiClient = axios.create({
+function getAccessToken() {
+    let user = JSON.parse(localStorage.getItem('user'));
+    console.log("getAT called");
+    if (user && user.access_token) {
+        // Apparently Node.js Express back-end doesn't use Authorization Bearer.
+        return user.access_token;
+    } else {
+        console.log("user not logged in");
+        return {};
+    }
+}
+
+const apiClientUnprotected = axios.create({
     baseURL: 'http://localhost:3000',
     withCredentials: false,
     headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
+    }
+})
+
+const apiClient = axios.create({
+    baseURL: 'http://localhost:3000',
+    withCredentials: false,
+    headers: {
+        'x-access-token': getAccessToken(),
+        Accept: 'application/json',
+       'Content-Type': 'application/json'
     }
 })
 
@@ -53,11 +75,11 @@ export default {
      *  USER CRUD
      */
     async postSignup(body) {
-        return await apiClient.post(`/auth/signup`, body);
+        return await apiClientUnprotected.post(`/auth/signup`, body);
     },
 
     async postSignin(body) {
-        return await apiClient.post(`/auth/signin`, body);
+        return await apiClientUnprotected.post(`/auth/signin`, body);
     },
 
 

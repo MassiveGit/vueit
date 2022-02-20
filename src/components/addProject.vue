@@ -71,6 +71,7 @@
                 .then(response => {
                     console.log("Project created", response.data.newProject[0]);
                     this.$emit('project-added', response.data.newProject[0]);
+                    this.$store.commit('addProject', response.data.newProject[0]); //Committing to store before redirecting to tasks page, because tasks page looks at the store to find Project Name etc.
                     this.$router.push({ name: 'tasks', params: {projectId: response.data.newProject[0].id}})
                 })
                 .catch((error) => {

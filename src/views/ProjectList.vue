@@ -70,10 +70,11 @@ export default {
         ApiInteractions
             .getProjects()
             .then(response => {
+              console.log(response);
                 this.$store.commit('setProjects', response.data.projects.sort((a,b) => a.order_id-b.order_id));
             })
             .catch(error => {
-                console.log('Error fetching projects: ' + error.response)
+                console.log('Error fetching projects: ' + error.response.data)
             })
     }
 

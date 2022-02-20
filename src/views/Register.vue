@@ -85,7 +85,7 @@ export default {
             .then(response => {
                 console.log(response);
                 if(response.data.access_token) {
-                  localStorage.setItem('User', JSON.stringify(response.data));
+                  localStorage.setItem('user', JSON.stringify(response.data));
                 }
                 //Check if response status was 200
                 //Add response data to browser memory
