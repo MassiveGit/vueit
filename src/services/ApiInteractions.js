@@ -1,6 +1,7 @@
 import axios from "axios";
 
 function getAccessToken() {
+    console.log("HEY IM A MESSAGE THAT GOT CALLED GUISE. GUISE SRSLY");
     let user = JSON.parse(localStorage.getItem('user'));
     console.log("getAT called");
     if (user && user.access_token) {
@@ -25,11 +26,21 @@ const apiClient = axios.create({
     baseURL: 'http://localhost:3000',
     withCredentials: false,
     headers: {
-        'x-access-token': getAccessToken(),
         Accept: 'application/json',
        'Content-Type': 'application/json'
     }
 })
+
+apiClient.interceptors.request.use(
+    (config) => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            config.headers.Authorization = `Bearer ${user.access_token}`;
+        }
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
 
 const basePath = '/projects';
 

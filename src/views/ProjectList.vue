@@ -67,6 +67,7 @@ export default {
 
     },
     created() {
+      console.log("Projects page created");
         ApiInteractions
             .getProjects()
             .then(response => {

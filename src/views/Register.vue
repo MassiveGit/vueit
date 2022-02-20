@@ -80,16 +80,26 @@ export default {
             console.log("Submitting User Signup request");
 
 
-            ApiInteractions
+
+          //Logout user if exists
+          localStorage.removeItem('user');
+
+
+          ApiInteractions
             .postSignup(this.formData)
             .then(response => {
                 console.log(response);
                 if(response.data.access_token) {
+                  console.log("Setting token");
                   localStorage.setItem('user', JSON.stringify(response.data));
+                  console.log('user set to localstorage: ' + localStorage.getItem('user'));
+                  this.$router.push({ name: 'projects'});
+                  //extract User name from data
                 }
-                //Check if response status was 200
-                //Add response data to browser memory
-                //extract User name from data
+                else {
+                  console.log("RUH ROH!");
+                }
+
             })
           .catch((error) => {
             this.server_error.push(error.response.data);
