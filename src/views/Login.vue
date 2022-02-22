@@ -90,7 +90,10 @@ export default {
             console.log(response);
             if (response.data.access_token) {
               console.log("Setting token");
+
               localStorage.setItem('user', JSON.stringify(response.data));
+              this.$store.commit("setIsAuthenticated", true);
+
               console.log('user set to localstorage: ' + localStorage.getItem('user'));
               console.log("Redirecting to Projects page");
               this.$router.push({ name: 'projects'});
@@ -99,10 +102,14 @@ export default {
 
           })
           .catch((error) => {
+            //display error message
             this.server_error.push(error.response.data);
+
+            //Log user out
+            localStorage.removeItem('user');
+            this.$store.commit("setIsAuthenticated", false);
+
             console.log("User Signup request returned error status: " + error.response.status);
-            console.log(error.response.data);
-            console.log(error.response.headers);
           })
     },
 

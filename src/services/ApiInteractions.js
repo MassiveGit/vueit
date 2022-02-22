@@ -1,18 +1,5 @@
 import axios from "axios";
 
-function getAccessToken() {
-    console.log("HEY IM A MESSAGE THAT GOT CALLED GUISE. GUISE SRSLY");
-    let user = JSON.parse(localStorage.getItem('user'));
-    console.log("getAT called");
-    if (user && user.access_token) {
-        // Apparently Node.js Express back-end doesn't use Authorization Bearer.
-        return user.access_token;
-    } else {
-        console.log("user not logged in");
-        return {};
-    }
-}
-
 const apiClientUnprotected = axios.create({
     baseURL: 'http://localhost:3000',
     withCredentials: false,

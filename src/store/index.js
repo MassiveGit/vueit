@@ -5,12 +5,17 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
+        isAuthenticated: false,
         projects: null,
         selectedProject: null,
         selectedTask: null,
         tasks: null,
     },
     mutations: {
+        setIsAuthenticated (state, isAuthenticated) {
+          state.isAuthenticated =  isAuthenticated;
+        },
+
         setProjects (state, projects) {
             state.projects = projects;
         },
