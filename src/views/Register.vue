@@ -83,6 +83,7 @@ export default {
 
           //Logout user if exists
           localStorage.removeItem('user');
+          this.$store.commit("setIsAuthenticated", false);
 
 
           ApiInteractions
@@ -103,6 +104,11 @@ export default {
             })
           .catch((error) => {
             this.server_error.push(error.response.data);
+
+            //Logout user if exists
+            localStorage.removeItem('user');
+            this.$store.commit("setIsAuthenticated", false);
+            
             console.log("User Signup request returned error status: " + error.response.status);
             console.log(error.response.data);
             console.log(error.response.headers);
