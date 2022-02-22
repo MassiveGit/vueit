@@ -60,6 +60,7 @@ Vue.directive('focus', {
  * Route definitions
  */
 const routes = [
+  { path: '/', redirect: {name: 'login'}}, //Default page should be login for now.
   { path: '/projects', name: "projects", component: Projects },
   { path: '/tasks/:projectId', name: "tasks", component: Tasks, props: true },
   { path: '/register', name: "register", component: Register },
@@ -72,12 +73,11 @@ const router = new VueRouter({
   mode: 'history'
 });
 
+
 new Vue({
   router,
   store,
   render: h => h(App),
 }).$mount('#app')
-
-
 
 
