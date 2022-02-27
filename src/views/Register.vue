@@ -7,7 +7,7 @@
         >
           <p class="error" v-if="server_error.length">{{server_error[0]}}</p>
             <p>
-                <label for="username">Username:</label>
+                <label for="username">Username: </label>
                 <input
                         id="username"
                         type="text"
@@ -18,7 +18,7 @@
             </p>
             <p class="error" v-if="username_error.length">{{username_error[0]}}</p>
             <p>
-                <label for="password">Password:</label>
+                <label for="password">Password: </label>
                 <input
                         id="password"
                         type="password"

@@ -1,4 +1,6 @@
 import axios from "axios";
+import store from "../store";
+import router from '../router';
 
 const apiClientUnprotected = axios.create({
     baseURL: 'http://localhost:3000',
@@ -18,6 +20,8 @@ const apiClient = axios.create({
     }
 })
 
+
+// Add the user's JWT to all requests that require auth
 apiClient.interceptors.request.use(
     (config) => {
         const user = JSON.parse(localStorage.getItem('user'));
@@ -28,6 +32,26 @@ apiClient.interceptors.request.use(
     },
     (error) => Promise.reject(error)
 );
+
+//Check if auth failed/expired etc. and clear token + redirect to login page.
+apiClient.interceptors.response.use(function (response) {
+    return response
+}, function (error) {
+    console.log("Error response returned from SERVER");
+    console.log(error.response);
+    if (error.response.status === 401) {
+        //Logout user if exists
+        console.log("user currently in localstorage: " + localStorage.getItem('user'));
+        localStorage.removeItem('user');
+        store.commit("setIsAuthenticated", false);
+        store.commit("setUnauthorisedMessage", error.response.data);
+        console.log("Is user logged in? : " + store.state.isAuthenticated);
+
+        router.push({ name: 'login'}); //may be redundant in some cases because of navigation guard
+        //Could add logic here to provide user timeout/other warning message, but not 100% necessary
+    }
+    return Promise.reject(error)
+})
 
 const basePath = '/projects';
 

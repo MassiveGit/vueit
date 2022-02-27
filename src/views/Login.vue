@@ -1,13 +1,14 @@
 <template>
-  <div className="login">
+  <div class="login">
     <h1>Login</h1>
     <form
         id="loginrForm"
         v-on:submit.prevent="validateAndSubmitForm"
     >
-      <p className="error" v-if="server_error.length">{{ server_error[0] }}</p>
+      <p class="error">{{ this.$store.state.unauthorisedMessage }}</p>
+      <p class="error" v-if="server_error.length">{{ server_error[0] }}</p>
       <p>
-        <label htmlFor="username">Username:</label>
+        <label for="username">Username: </label>
         <input
             id="username"
             type="text"
@@ -16,9 +17,9 @@
             name="username"
         >
       </p>
-      <p className="error" v-if="username_error.length">{{ username_error[0] }}</p>
+      <p class="error" v-if="username_error.length">{{ username_error[0] }}</p>
       <p>
-        <label htmlFor="password">Password:</label>
+        <label for="password">Password: </label>
         <input
             id="password"
             type="password"
@@ -26,11 +27,11 @@
             name="password"
         >
       </p>
-      <p className="error" v-if="password_error.length">{{ password_error[0] }}</p>
+      <p class="error" v-if="password_error.length">{{ password_error[0] }}</p>
       <p>
         <input
             type="submit"
-            value="Create Account"
+            value="Login"
         >
       </p>
     </form>
@@ -82,6 +83,7 @@ export default {
 
       //Logout user if exists
       localStorage.removeItem('user');
+      this.$store.commit("setIsAuthenticated", false);
 
 
       ApiInteractions
@@ -102,8 +104,13 @@ export default {
 
           })
           .catch((error) => {
-            //display error message
-            this.server_error.push(error.response.data);
+            if (!error.response) {
+              this.server_error.push("Network Error encountered");
+            }
+            else {
+              //display server error message
+              this.server_error.push(error.response.data);
+            }
 
             //Log user out
             localStorage.removeItem('user');
@@ -125,6 +132,10 @@ export default {
 
 .register {
   background-color: red;
+}
+
+.error {
+  color: darkred;
 }
 
 </style>

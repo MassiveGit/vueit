@@ -6,6 +6,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         isAuthenticated: false,
+        unauthorisedMessage: null,
         projects: null,
         selectedProject: null,
         selectedTask: null,
@@ -14,6 +15,10 @@ export default new Vuex.Store({
     mutations: {
         setIsAuthenticated (state, isAuthenticated) {
           state.isAuthenticated =  isAuthenticated;
+        },
+
+        setUnauthorisedMessage (state, unauthorisedMessage) {
+            state.unauthorisedMessage =  unauthorisedMessage;
         },
 
         setProjects (state, projects) {

@@ -75,7 +75,7 @@ export default {
                 this.$store.commit('setProjects', response.data.projects.sort((a,b) => a.order_id-b.order_id));
             })
             .catch(error => {
-                console.log('Error fetching projects: ' + error.response.data)
+                console.log('Error fetching projects: ' + error.response);
             })
     }
 
