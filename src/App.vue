@@ -2,8 +2,9 @@
   <div id="app">
     <p>
       <router-link to="/projects">View Projects</router-link>
-      <router-link :to="{name: 'login'}">Login</router-link>
-      <router-link :to="{name: 'register'}">Register</router-link>
+      <router-link v-if="!this.$store.state.isAuthenticated" :to="{name: 'login'}">Login</router-link>
+      <router-link v-if="!this.$store.state.isAuthenticated" :to="{name: 'register'}">Register</router-link>
+      <a v-if="this.$store.state.isAuthenticated" @click='logout'>Logout</a>
     </p>
     <router-view></router-view>
 
@@ -15,6 +16,10 @@
 export default {
   name: 'App',
 }
+
+
+
+
 </script>
 
 <style>

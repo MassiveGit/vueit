@@ -10,10 +10,13 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 
-//Set title of each distinct page:
-import titleMixin from "./mixins/titleMixin";
+// MIXINS:
+import titleMixin from "./mixins/titleMixin"; //Set title of each distinct page:
+import authHelperMixin from "./mixins/AuthHelperMixin"; // Make Login/Logout functions globally available as they're shared by serveral views.
 
 Vue.mixin(titleMixin)
+Vue.mixin(authHelperMixin)
+
 
 Vue.config.productionTip = false
 Vue.use(VueRouter)
