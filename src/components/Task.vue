@@ -1,7 +1,6 @@
 <template>
     <!--<transition name="fade">-->
     <div>
-        <div class="inProgText" v-if="task.status == 'INPRG'">IN PROGRESS</div>
         <div class="task" v-bind:class="[this.task.type, this.task.status]" @click="toggleDesc">
             <div class="task-text">
                 <h3 class="taskName">{{task.name}}</h3>
@@ -91,10 +90,10 @@ export default {
 
 }
 
-.inProgText {
-    float: left;
-    transform: rotate(90deg);
-    margin-top: 10px;
+.INPRG {
+  margin-left: 15%;
+
+
 }
 
 ul {

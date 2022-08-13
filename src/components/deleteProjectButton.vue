@@ -1,8 +1,6 @@
 <template>
     <div id="project-delete-button">
-        <button
-            @click.stop="deleteProject"
-        >Delete</button>
+        <button @click.stop="deleteProject">Delete</button>
     </div>
 
 </template>

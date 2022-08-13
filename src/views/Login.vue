@@ -82,29 +82,25 @@ export default {
 
 
       //Logout user if exists
-      localStorage.removeItem('user');
-      this.$store.commit("setIsAuthenticated", false);
+      this.logout();
 
 
       ApiInteractions
           .postSignin(this.formData)
           .then(response => {
             console.log(response);
+            this.server_error = null; // Clear server errors
             if (response.data.access_token) {
-              console.log("Setting token");
+              console.log("Success - processing login data");
+              this.login(response.data);
 
-              localStorage.setItem('user', JSON.stringify(response.data));
-              this.$store.commit("setIsAuthenticated", true);
 
-              console.log('user set to localstorage: ' + localStorage.getItem('user'));
-              console.log("Redirecting to Projects page");
-              this.$router.push({ name: 'projects'});
-              //extract User name from data
             }
 
           })
           .catch((error) => {
             if (!error.response) {
+              console.log(error);
               this.server_error.push("Network Error encountered");
             }
             else {
@@ -112,10 +108,7 @@ export default {
               this.server_error.push(error.response.data);
             }
 
-            //Log user out
-            localStorage.removeItem('user');
-            this.$store.commit("setIsAuthenticated", false);
-
+            this.logout();
             console.log("User Signup request returned error status: " + error.response.status);
           })
     },

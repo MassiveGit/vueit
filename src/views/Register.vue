@@ -82,8 +82,7 @@ export default {
 
 
           //Logout user if exists
-          localStorage.removeItem('user');
-          this.$store.commit("setIsAuthenticated", false);
+          this.logout();
 
 
           ApiInteractions
@@ -91,11 +90,7 @@ export default {
             .then(response => {
                 console.log(response);
                 if(response.data.access_token) {
-                  console.log("Setting token");
-                  localStorage.setItem('user', JSON.stringify(response.data));
-                  console.log('user set to localstorage: ' + localStorage.getItem('user'));
-                  this.$router.push({ name: 'projects'});
-                  //extract User name from data
+                  this.login(response.data);
                 }
                 else {
                   console.log("RUH ROH!");

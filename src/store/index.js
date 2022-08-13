@@ -5,8 +5,14 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
+        //Auth Related
         isAuthenticated: false,
         unauthorisedMessage: null,
+
+        //Identity Related
+        username: null,
+
+        //Task Related
         projects: null,
         selectedProject: null,
         selectedTask: null,
@@ -19,6 +25,10 @@ export default new Vuex.Store({
 
         setUnauthorisedMessage (state, unauthorisedMessage) {
             state.unauthorisedMessage =  unauthorisedMessage;
+        },
+
+        setUsername (state, username) {
+            state.username = username;
         },
 
         setProjects (state, projects) {
